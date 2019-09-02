@@ -40,15 +40,33 @@ app.get('/notes/:id', (req, res) => {
     }
 })
 
-app.post('/notes', (req,res) => {
-    const maxId = notes.length > 0 
-    ? Math.max(...notes.map(n => n.id))
+const generateId = () => {
+    const maxId = notes.length > 0 ?
+    Math.max(...notes.map(n => n.id))
     : 0
-    const note = req.body
-    note.id = maxId + 1
 
-    notes = notes.concat(note)
-    res.json(note)
+    return maxId + 1
+}
+
+app.post('/notes', (req,res) => {
+
+    const body = req.body
+
+    if(!body.content) {
+        return res.status(400).json({
+            error: 'content missing'
+        })
+    }
+
+    const newNote = {
+        content: body.content,
+        important: body.important,
+        date: Date(),
+        id: generateId()
+    }
+
+    notes = notes.concat(newNote)
+    res.json(newNote)
 })
 
 app.delete('/notes/:id', (req,res) => {

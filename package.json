@@ -1,7 +1,7 @@
 {
-  "name": "note",
+  "name": "notes",
   "version": "1.0.0",
-  "description": "note backend",
+  "description": "notes backend",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

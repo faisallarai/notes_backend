@@ -3,7 +3,7 @@ const http = require('http')
 const notes = [
     {
         id: 1,
-        content: "Hello",
+        content: "Hello World",
         date: "2019-09-02"
     }
 ]

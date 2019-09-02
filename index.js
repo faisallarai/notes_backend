@@ -1,7 +1,10 @@
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
 
-const notes = [
+app.use(bodyParser.json())
+
+let notes = [
     {
         id: 1,
         content: "ReactJS",
@@ -29,14 +32,29 @@ app.get('/notes', (req, res) => {
 
 app.get('/notes/:id', (req, res) => {
     const id = Number(req.params.id)
-    console.log('id',id)
-    console.log(notes)
-    const note = notes.find(n => {
-        console.log(n.id, typeof n.id, id, typeof id, n.id === id)
-        return n.id === id
-    })
-    console.log('note',note)
+    const note = notes.find(n => n.id === id)
+    if(note) {
+        res.json(note)
+    } else {
+        res.status(404).end()
+    }
+})
+
+app.post('/notes', (req,res) => {
+    const maxId = notes.length > 0 
+    ? Math.max(...notes.map(n => n.id))
+    : 0
+    const note = req.body
+    note.id = maxId + 1
+
+    notes = notes.concat(note)
     res.json(note)
+})
+
+app.delete('/notes/:id', (req,res) => {
+    const id = Number(req.params.id)
+    notes = notes.filter(n => n.id !== id)
+    res.status(204).end()
 })
 
 const port = 3001

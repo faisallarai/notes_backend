@@ -1,8 +1,46 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
+const uuid = require('node-uuid')
 
 app.use(bodyParser.json())
+
+const requestLogger = (request, response, next) => {
+    console.log('Method:', request.method)
+    console.log('Path:', request.path)
+    console.log('Body:', request.body)
+    console.log('---')
+    next()
+}
+
+app.use(requestLogger)
+//app.use(morgan('tiny'))
+
+// // only log error responses 
+// app.use(morgan('tiny', {
+//     skip: function(req,res) { return res.statusCode < 400}
+// }))
+
+// app.use(morgan('combined', {
+//     skip: function(req,res) { return res.statusCode < 400}
+// }))
+
+morgan.token('body', (request) => {
+    return JSON.stringify(request.body)
+})
+
+morgan.token('id', (request) => request.id)
+
+// Inject id in the request 
+// to be able to call request.id 
+const assignId = (req, res, next) => {
+    req.id = uuid.v4()
+    next()
+}
+
+app.use(assignId)
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body :id'))
 
 let notes = [
     {
@@ -75,6 +113,13 @@ app.delete('/notes/:id', (req,res) => {
     res.status(204).end()
 })
 
+const unKnownEndpoint = (request, response) => {
+    response.status(404).send({error: 'unknown enpoint'})
+}
+
+app.use(unKnownEndpoint)
+
 const port = 3001
-app.listen(port)
-console.log(`Server running on ${port}`)
+app.listen(port, () => {
+    console.log(`Server running on ${port}`)
+})

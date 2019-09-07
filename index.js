@@ -1,9 +1,11 @@
 const express = require('express')
-const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const uuid = require('node-uuid')
+const cors = require('cors')
 
+const app = express()
+app.use(cors())
 app.use(bodyParser.json())
 
 const requestLogger = (request, response, next) => {
@@ -119,7 +121,8 @@ const unKnownEndpoint = (request, response) => {
 
 app.use(unKnownEndpoint)
 
-const port = 3001
+const port = prcoess.env.PORT || 3001
+
 app.listen(port, () => {
     console.log(`Server running on ${port}`)
 })

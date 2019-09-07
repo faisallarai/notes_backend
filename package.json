@@ -8,7 +8,7 @@
     "watch": "nodemon index.js",
     "build:ui": "rm -rf build && cd ../../react_projects/noteapp_react && npm run build --prod && cp -r build ../../node_projects/notes_backend/",
     "deploy": "git push heroku master",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push origin master && npm run deploy",
     "logs:prod": "heroku logs --tail",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -48,17 +48,17 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 let notes = [
     {
         id: 1,
-        content: "ReactJS",
+        title: "ReactJS",
         date: "2019-09-02"
     },
     {
         id: 2,
-        content: "NodeJS",
+        title: "NodeJS",
         date: "2019-09-02"
     },
     {
         id: 3,
-        content: "Redux",
+        title: "Redux",
         date: "2019-09-02"
     }
 ]
@@ -93,14 +93,14 @@ app.post('/notes', (req,res) => {
 
     const body = req.body
 
-    if(!body.content) {
+    if(!body.title) {
         return res.status(400).json({
             error: 'content missing'
         })
     }
 
     const newNote = {
-        content: body.content,
+        title: body.title,
         important: body.important,
         date: Date(),
         id: generateId()
